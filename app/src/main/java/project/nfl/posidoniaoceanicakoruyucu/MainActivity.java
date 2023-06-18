@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -20,8 +21,34 @@ public class MainActivity extends AppCompatActivity {
         mWebView.setWebViewClient(new myWebViewclient()); // to handle URL redirects in the app
         mWebView.getSettings().setJavaScriptEnabled(true); // to enable JavaScript on web pages
         mWebView.getSettings().setGeolocationEnabled(true); // to enable GPS location on web pages
-        mWebView.getSettings().setDisplayZoomControls(false);
-        mWebView.loadUrl("https://f003-78-185-171-64.ngrok-free.app");
+        mWebView.getSettings().setDisplayZoomControls(false); // to disable zooming
+        mWebView.loadUrl("https://c061-78-185-171-64.ngrok-free.app");
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mWebView.canGoBack()) {
+            mWebView.goBack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_BACK:
+                    if (mWebView.canGoBack()) {
+                        mWebView.goBack();
+                    } else {
+                        finish();
+                    }
+                    return true;
+            }
+
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     public class myWebViewclient extends WebViewClient {
@@ -41,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             final String urls = url;
-            if (urls.contains("mailto") || urls.contains("whatsapp") || urls.contains("tel") || urls.contains("sms") || urls.contains("facebook") || urls.contains("truecaller") || urls.contains("twiter")) {
+            if (urls.contains("mailto") || urls.contains("whatsapp") || urls.contains("tel") || urls.contains("sms") || urls.contains("facebook") || urls.contains("truecaller") || urls.contains("twitter")) {
                 mWebView.stopLoading();
                 Intent i = new Intent();
                 i.setAction(Intent.ACTION_VIEW);
@@ -59,15 +86,8 @@ public class MainActivity extends AppCompatActivity {
             super.onPageFinished(view, url);
 
         }
-    }
 
 
-    @Override
-    public void onBackPressed() {
-        if (mWebView.canGoBack()) {
-            mWebView.goBack();
-        } else {
-            super.onBackPressed();
-        }
     }
+
 }
